@@ -55,7 +55,7 @@ def game_summary(pgn: str, side: Side) -> str:
         my_move_score = ms.score(mate_score=100000)
 
         response += move_eval_formatter(
-            move_count=math.ceil((i + 1 / 2)),
+            move_count=math.ceil((i + 1) / 2),
             player_name=white_player if i % 2 == 0 else black_player,
             my_move=move,
             best_move=best_move,
