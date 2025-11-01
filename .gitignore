@@ -1,0 +1,5 @@
+.venv/
+.env
+Notebooks/
+Examples/
+Engines/
