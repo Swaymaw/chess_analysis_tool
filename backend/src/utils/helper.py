@@ -1,13 +1,21 @@
 from functools import lru_cache
-from src.utils.types import Engine
-from src.utils.config import ENGINE_PATHS
+
 import chess.engine
+
+from src.utils.config import ENGINE_PATHS, WEIGHTS_FILE
+from src.utils.types import EngineTypes
 
 
 @lru_cache(maxsize=1)
-def get_engine(engine: Engine):
-    if engine == Engine.STOCKFISH:
+def get_engine(engine_type: EngineTypes) -> chess.engine.SimpleEngine:
+    if engine_type == EngineTypes.STOCKFISH:
         return chess.engine.SimpleEngine.popen_uci(ENGINE_PATHS["stockfish"])
+    elif engine_type == EngineTypes.LC0:
+        engine: chess.engine.SimpleEngine = chess.engine.SimpleEngine.popen_uci(
+            ENGINE_PATHS["lc0"]
+        )
+        engine.configure({"WeightsFile": WEIGHTS_FILE.get("maia-2200")})
+        return engine
 
 
 def fmt(s):

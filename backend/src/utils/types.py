@@ -1,8 +1,9 @@
 from enum import Enum
 
 
-class Engine(str, Enum):
+class EngineTypes(str, Enum):
     STOCKFISH = "stockfish"
+    LC0 = "lc0"
 
 
 class Side(str, Enum):
