@@ -15,16 +15,17 @@ mcp = FastMCP("Chess Analysis Tool")
 @mcp.tool
 def game_summary(pgn: str, side: Side) -> str:
     """
-    Returns a summary of the game move by move for each player.
+    Generates a human-readable summary of the game move by move for the given player side.
 
     Args:
-        pgn (str): The PGN string of the game.
-        side (Side) ("white" | "black"): The side of the player for whom the summary is to be generated.
+        pgn (str): The PGN (Portable Game Notation) string representing the chess game.
+        side (Side): The player's side ("white" or "black").
+                        Accepts string values "white" or "black", which are internally mapped to the `Side` enum.
 
     Returns:
-        dict: A string containing a summary for the current game.
+        str: A summary of the game for the specified side.
     """
-    engine: SimpleEngine = get_engine(EngineTypes.LC0)
+    engine: SimpleEngine = get_engine(EngineTypes.STOCKFISH)
 
     game = chess.pgn.read_game(StringIO(pgn))
 
