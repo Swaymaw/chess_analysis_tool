@@ -19,7 +19,7 @@ def game_summary(pgn: str, side: Side) -> str:
 
     Args:
         pgn (str): The PGN string of the game.
-        side (Side): The side of the player for whom the summary is to be generated.
+        side (Side) ("white" | "black"): The side of the player for whom the summary is to be generated.
 
     Returns:
         dict: A string containing a summary for the current game.

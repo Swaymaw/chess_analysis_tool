@@ -18,9 +18,7 @@ def get_engine(engine_type: EngineTypes) -> chess.engine.SimpleEngine:
         return engine
 
 
-def fmt(s):
-    if s is None:
-        return "mate"
+def fmt(s: float):
     return f"{s / 100:.2f}"
 
 
