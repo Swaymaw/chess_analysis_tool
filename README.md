@@ -15,3 +15,4 @@ TODO:
 3. Tactic based explanation for moves and recommendations.
 4. Dynamic move based explanations to help users understand a positions and its move choices better.
 5. Opening Book integration to suggest better moves and explainable insights during opening phase of the game.
+6. Adding a chess games and move tagging system; to filter similar ideas from historical games and create personalized puzzles.

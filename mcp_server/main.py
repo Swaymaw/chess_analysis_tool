@@ -23,7 +23,11 @@ def game_summary(pgn: str, side: Side) -> str:
     player = chess.WHITE if side == Side.WHITE else chess.BLACK
 
     response = get_engine_summary(
-        pgn_str=pgn, player=player, time_per_move=0.5, line_depth=5
+        pgn_str=pgn, player=player, time_per_move=0.2, line_depth=3
     )
 
     return response
+
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
