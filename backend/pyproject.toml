@@ -5,11 +5,5 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "chess>=1.11.2",
-    "fastmcp>=2.13.0.2",
-]
-
-[dependency-groups]
-dev = [
-    "ipykernel>=7.1.0",
+    "fastapi>=0.121.0",
 ]
