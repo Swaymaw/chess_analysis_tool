@@ -56,6 +56,7 @@ def best_line(
 
             best_move_san = uci_to_san(best_move, board)
             best_moves.append(best_move_san)
+            board.push(best_move)
         else:
             break
 
