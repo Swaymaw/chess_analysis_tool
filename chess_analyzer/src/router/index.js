@@ -4,7 +4,12 @@ import AnalysisView from "../views/AnalysisView.vue";
 
 const routes = [
   { path: "/", name: "home", component: HomeView },
-  { path: "/analysis", name: "analysis", component: AnalysisView, props: true },
+  { path: "/analysis", name: "analysis", component: AnalysisView },
 ];
 
-export default createRouter({ history: createWebHistory(), routes });
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router;

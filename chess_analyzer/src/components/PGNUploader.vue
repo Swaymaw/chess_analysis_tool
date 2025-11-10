@@ -1,34 +1,46 @@
 <template>
-    <div class="card shadow-sm p-4 mx-auto" style="max-width: 600px">
-        <div class="mb-3">
-            <label class="form-label fw-semibold">Paste your PGN:</label>
-            <textarea v-model="pgn" rows="6" class="form-control"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-semibold">Select your side:</label>
-            <select v-model="side" class="form-select">
-                <option value="white">White</option>
-                <option value="black">Black</option>
-            </select>
-        </div>
-
-        <button class="btn btn-primary w-100 fw-semibold" @click="analyze">
-            Analyze
-        </button>
+    <div class="container border p-5 rounded">
+        <h1>Analyze Game</h1>
+        <br />
+        <form>
+            <div class="form-group">
+                <label for="pgn_string">Paste your PGN String Here:</label>
+                <textarea
+                    v-model="PGNString"
+                    id="pgn_string"
+                    rows="10"
+                    class="form-control"
+                ></textarea>
+            </div>
+            <div class="mt-5 d-flex align-items-center form-group">
+                <small class="me-3 fw-bolder">Or Upload a .PGN file</small>
+                <input type="file" class="border p-2" />
+            </div>
+            <div class="d-flex justify-content-center mt-5">
+                <button @click="analyze" type="submit" class="btn btn-primary">
+                    <i class="fa-regular fa-chess-knight" /> Analyze Game
+                </button>
+            </div>
+        </form>
     </div>
 </template>
 
-<script>
-export default {
-    data() {
-        return { pgn: "", side: "white" };
-    },
-    methods: {
-        analyze() {
-            if (!this.pgn.trim()) return alert("Please paste a PGN first!");
-            this.$emit("analyze", { pgn: this.pgn, side: this.side });
-        },
-    },
-};
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useGameStore } from "../store/game.js";
+
+const PGNString = ref("");
+const router = useRouter();
+const store = useGameStore();
+
+function analyze(e) {
+    e.preventDefault();
+    if (!PGNString.value) {
+        return alert("Please paste a PGN string!");
+    } else {
+        store.setPGN(PGNString.value);
+        router.push({ name: "analysis" });
+    }
+}
 </script>
