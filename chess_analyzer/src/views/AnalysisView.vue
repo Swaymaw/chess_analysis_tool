@@ -68,7 +68,7 @@ const nextMove = () => {
         const move = gameHistory.value[moveIndex.value];
         game.move(move.san);
         currentFen.value = game.fen();
-        boardAPI.value?.setPosition(currentFen.value);
+        boardAPI.value?.move(move.san);
     }
 };
 
@@ -77,13 +77,11 @@ const prevMove = () => {
         game.undo();
         currentFen.value = game.fen();
         moveIndex.value--;
-        boardAPI.value?.setPosition(currentFen.value);
+        boardAPI.value?.undoLastMove();
     }
 };
 
 function flipBoard() {
-    if (boardAPI.value) {
-        boardAPI.value.toggleOrientation();
-    }
+    boardAPI.value?.toggleOrientation();
 }
 </script>
