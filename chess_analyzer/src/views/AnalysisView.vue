@@ -59,6 +59,7 @@ onMounted(() => {
     gameHistory.value = game.history({ verbose: true });
     game.reset();
     currentFen.value = game.fen();
+    boardAPI.value?.setPosition(currentFen.value);
 });
 
 const nextMove = () => {
