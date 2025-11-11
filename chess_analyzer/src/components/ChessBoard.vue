@@ -82,22 +82,43 @@ const nextMove = () => {
 const prevMove = () => {
     if (moveIndex.value > -1) {
         game.undo();
+        moveIndex.value--;
         const move = gameHistory.value[moveIndex.value];
+        currentFen.value = game.fen();
+        let prevFen = game.fen();
+        if (moveIndex.value > -1) {
+            game.undo();
+            prevFen = game.fen();
+            game.move(move.san);
+        }
+        boardAPI.value?.undoLastMove();
 
         emit("move-change", {
             moveIndex: moveIndex.value,
-            move: move.san,
-            fen: game.fen(),
+            move: move?.san,
+            fen: prevFen,
             orientation: orientation.value,
         });
-        moveIndex.value--;
-        currentFen.value = game.fen();
-        boardAPI.value?.undoLastMove();
     }
 };
 
 function flipBoard() {
     boardAPI.value?.toggleOrientation();
     orientation.value = orientation.value === "white" ? "black" : "white";
+    game.undo();
+
+    if (moveIndex.value > -1) {
+        const curMove = gameHistory.value[moveIndex.value];
+        const prevFen = game.fen();
+
+        game.move(curMove.san);
+
+        emit("move-change", {
+            moveIndex: moveIndex.value,
+            move: curMove.san,
+            fen: prevFen,
+            orientation: orientation.value,
+        });
+    }
 }
 </script>

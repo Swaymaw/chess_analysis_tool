@@ -2,7 +2,10 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <ChessBoard :pgn="store.pgn" @move-change="onMoveChange" />
+                <ChessBoard
+                    :pgn="store.pgn"
+                    @move-change="debouncedOnMoveChange"
+                />
             </div>
             <div class="col">
                 <pre v-if="isLoading">Analyzing...</pre>
@@ -14,6 +17,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { debounce } from "../utils/helper.js";
 import { useGameStore } from "../store/game.js";
 import ChessBoard from "../components/ChessBoard.vue";
 import api from "../api/api.js";
@@ -24,6 +28,10 @@ const res = ref(null);
 const store = useGameStore();
 async function onMoveChange({ moveIndex, move, fen, orientation }) {
     console.log("Move changed:", moveIndex, move, fen, orientation);
+    if (moveIndex < 0) {
+        res.value = "";
+        return;
+    }
     isLoading.value = true;
     try {
         res.value = await api.analyzePosition({
@@ -36,4 +44,6 @@ async function onMoveChange({ moveIndex, move, fen, orientation }) {
         isLoading.value = false;
     }
 }
+
+const debouncedOnMoveChange = debounce(onMoveChange, 20);
 </script>
