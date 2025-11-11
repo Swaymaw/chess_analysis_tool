@@ -3,6 +3,7 @@
         <TheChessboard
             :fen="currentFen"
             :board-config="boardConfig"
+            class="my-chessboard-container"
             @board-created="(api) => (boardAPI = api)"
         />
 
@@ -134,3 +135,10 @@ function flipBoard() {
     }
 }
 </script>
+<style scoped>
+.my-chessboard-container {
+    /* Override the default CSS variables for the chessboard */
+    --vc-light-color: #000000; /* Example: Cream color for light squares */
+    --vc-dark-color: #b58863; /* Example: Brown color for dark squares */
+}
+</style>

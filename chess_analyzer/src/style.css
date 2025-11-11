@@ -1,0 +1,39 @@
+cg-board {
+    background-image: url("assets/themes/green.svg") !important;
+}
+cg-board .pawn.white {
+    background-image: url("assets/pieces/standard/plt.svg") !important;
+}
+cg-board .pawn.black {
+    background-image: url("assets/pieces/standard/pdt.svg") !important;
+}
+cg-board .bishop.white {
+    background-image: url("assets/pieces/standard/blt.svg") !important;
+}
+cg-board .bishop.black {
+    background-image: url("assets/pieces/standard/bdt.svg") !important;
+}
+cg-board .rook.white {
+    background-image: url("assets/pieces/standard/rlt.svg") !important;
+}
+cg-board .rook.black {
+    background-image: url("assets/pieces/standard/rdt.svg") !important;
+}
+cg-board .knight.white {
+    background-image: url("assets/pieces/standard/nlt.svg") !important;
+}
+cg-board .knight.black {
+    background-image: url("assets/pieces/standard/ndt.svg") !important;
+}
+cg-board .queen.white {
+    background-image: url("assets/pieces/standard/qlt.svg") !important;
+}
+cg-board .queen.black {
+    background-image: url("assets/pieces/standard/qdt.svg") !important;
+}
+cg-board .king.white {
+    background-image: url("assets/pieces/standard/klt.svg") !important;
+}
+cg-board .king.black {
+    background-image: url("assets/pieces/standard/kdt.svg") !important;
+}
