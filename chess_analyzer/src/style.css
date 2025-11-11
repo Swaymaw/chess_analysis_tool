@@ -1,3 +1,22 @@
+piece {
+    width: 12.5% !important;
+    height: 12.5% !important;
+}
+
+.orientation-white .files coord:nth-child(2n + 1),
+.orientation-white .ranks coord:nth-child(2n),
+.orientation-black .files coord:nth-child(2n),
+.orientation-black .ranks coord:nth-child(2n + 1) {
+    color: #ebecd0 !important;
+}
+
+.orientation-white .files coord:nth-child(2n),
+.orientation-white .ranks coord:nth-child(2n + 1),
+.orientation-black .files coord:nth-child(2n + 1),
+.orientation-black .ranks coord:nth-child(2n) {
+    color: #739552 !important;
+}
+
 cg-board {
     background-image: url("assets/themes/green.svg") !important;
 }
