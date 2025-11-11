@@ -1,11 +1,17 @@
 <template>
     <div>
+        <div>
+            {{ topPlayerName }}
+        </div>
         <TheChessboard
             :fen="currentFen"
             :board-config="boardConfig"
             class="my-chessboard-container"
             @board-created="(api) => (boardAPI = api)"
         />
+        <div>
+            {{ bottomPlayerName }}
+        </div>
 
         <div>
             <h2>Game Controls</h2>
@@ -26,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted, computed } from "vue";
 import { TheChessboard } from "vue3-chessboard";
 import "vue3-chessboard/style.css";
 import { Chess } from "chess.js";
@@ -43,11 +49,21 @@ const currentFen = ref("");
 const gameHistory = ref([]);
 const moveIndex = ref(-1);
 const orientation = ref("white");
+const whiteName = ref("White");
+const blackName = ref("Black");
 
 const boardConfig = {
     viewOnly: true,
     coordinates: true,
 };
+
+const topPlayerName = computed(() => {
+    return orientation.value === "white" ? blackName.value : whiteName.value;
+});
+
+const bottomPlayerName = computed(() => {
+    return orientation.value === "white" ? whiteName.value : blackName.value;
+});
 
 const handleKey = (e) => {
     if (e.key === "ArrowLeft") prevMove();
@@ -66,6 +82,11 @@ watch(
     (newPgn) => {
         if (!newPgn) return;
         game.loadPgn(newPgn, { strict: false });
+
+        const headers = game.getHeaders();
+        whiteName.value = headers.White || "White";
+        blackName.value = headers.Black || "Black";
+
         gameHistory.value = game.history({ verbose: true });
         game.reset();
         moveIndex.value = -1;
@@ -135,10 +156,3 @@ function flipBoard() {
     }
 }
 </script>
-<style scoped>
-.my-chessboard-container {
-    /* Override the default CSS variables for the chessboard */
-    --vc-light-color: #000000; /* Example: Cream color for light squares */
-    --vc-dark-color: #b58863; /* Example: Brown color for dark squares */
-}
-</style>
