@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { TheChessboard } from "vue3-chessboard";
 import "vue3-chessboard/style.css";
 import { Chess } from "chess.js";
@@ -47,6 +47,18 @@ const boardConfig = {
     viewOnly: true,
     coordinates: true,
 };
+
+const handleKey = (e) => {
+    if (e.key === "ArrowLeft") prevMove();
+    if (e.key === "ArrowRight") nextMove();
+};
+
+onMounted(() => {
+    window.addEventListener("keydown", handleKey);
+});
+onUnmounted(() => {
+    window.removeEventListener("keydown", handleKey);
+});
 
 watch(
     () => props.pgn,
