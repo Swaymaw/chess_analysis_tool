@@ -14,8 +14,12 @@ analysis_router = APIRouter(prefix="/analysis")
 def move_analysis(data: Annotated[MoveAnalyze, Query()]):
 
     best_move, best_move_score, my_move_score = move_scoring(
-        fen=data.fen, move=data.move, side=data.orientation
+        fen=data.fen, move=data.move, time_per_move=3.0
     )
+
+    if data.orientation == "black":
+        best_move_score *= -1
+        my_move_score *= -1
 
     move_eval = move_eval_formatter(
         move_count=data.moveIndex,
@@ -25,7 +29,10 @@ def move_analysis(data: Annotated[MoveAnalyze, Query()]):
         best_move_score=best_move_score,
         my_move_score=my_move_score,
     )
-    engine_line = best_line(fen=data.fen)
+
+    engine_line = best_line(
+        fen=data.fen, time_per_move=0.5, first_move=best_move, max_depth=10
+    )
 
     line_description = chess_line_formatter(engine_line)
 

@@ -12,21 +12,20 @@ from src.utils.types import EngineTypes
 def move_scoring(
     fen: str,
     move: str,
-    side: str,
     engine_type: EngineTypes = EngineTypes.STOCKFISH,
     time_per_move: float = 1.0,
 ) -> tuple[str, float, float]:
 
-    player = chess.WHITE if side.strip().lower() == "white" else chess.BLACK
     board = chess.Board(fen)
     engine: SimpleEngine = get_engine(engine_type)
 
-    # analyzing the current position
+    # finding the best move for the given FEN position
     info = engine.analyse(board, Limit(time=time_per_move))
     best_move = uci_to_san(
         info.get(
             "pv",
             [
+                # FailSafe just to avoid Type Annotation warnings
                 chess.Move(
                     from_square=chess.parse_square("e4"),
                     to_square=chess.parse_square("e6"),
@@ -36,22 +35,23 @@ def move_scoring(
         board,
     )
 
-    bs = info.get("score", PovScore(relative=Cp(0), turn=player)).pov(player)
+    # push best move on a copied board and evaluate score on reached position
+    b_best = board.copy()
+    b_best.push_san(best_move)
+    info_best = engine.analyse(b_best, Limit(time=time_per_move))
+    bs = info_best.get("score", PovScore(relative=Cp(0), turn=chess.WHITE)).white()
     best_move_score = bs.score(mate_score=MATE_SCORE)
 
-    # # pushed the move on a copied board
-    # b_best = board.copy()
-    # b_best.push(best_move)
-    # info_best = engine.analyse(b_best, Limit(time=time_per_move))
-    # bs = info_best.get("score", PovScore(relative=Cp(0), turn=player)).pov(player)
-    # best_move_score = bs.score(mate_score=100000)
+    if best_move == move:
+        my_move_score = best_move_score
 
-    # pushed user's move on a copied board
-    b_my = board.copy()
-    b_my.push_san(move)
-    info_my = engine.analyse(b_my, Limit(time=time_per_move))
-    ms = info_my.get("score", PovScore(relative=Cp(0), turn=player)).pov(player)
-    my_move_score = ms.score(mate_score=MATE_SCORE)
+    else:
+        # push user's move on a copied board and evaluate score on reached position
+        b_my = board.copy()
+        b_my.push_san(move)
+        info_my = engine.analyse(b_my, Limit(time=time_per_move))
+        ms = info_my.get("score", PovScore(relative=Cp(0), turn=chess.WHITE)).white()
+        my_move_score = ms.score(mate_score=MATE_SCORE)
 
     return best_move, best_move_score, my_move_score
 
@@ -61,12 +61,17 @@ def best_line(
     fen: str,
     engine_type: EngineTypes = EngineTypes.STOCKFISH,
     time_per_move: float = 1.0,
+    first_move: str | None = None,
     max_depth: int = 10,
 ) -> list[str]:
 
     board = chess.Board(fen)
     best_moves = []
     engine: SimpleEngine = get_engine(engine_type)
+
+    if first_move:
+        board.push_san(first_move)
+        best_moves.append(first_move)
 
     for _ in range(max_depth):
         if not board.is_game_over():
