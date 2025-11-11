@@ -7,3 +7,21 @@ export function debounce(func, delay) {
     }, delay);
   };
 }
+
+export function debounceAsync(func, delay) {
+  let timeout;
+
+  return async function (...args) {
+    clearTimeout(timeout);
+    return new Promise((resolve, reject) => {
+      timeout = setTimeout(async () => {
+        try {
+          const result = await func.apply(this, args);
+          resolve(result);
+        } catch (err) {
+          reject(err);
+        }
+      }, delay);
+    });
+  };
+}
