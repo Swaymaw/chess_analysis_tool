@@ -2,9 +2,7 @@ bishup.com, www.bishup.com {
     encode gzip
 
     @api_no_slash path /api
-    handle @api_no_slash {
-        redir /api/
-    }
+    redir @api_no_slash /api/
 
     # Route API calls to the backend
     handle_path /api/* {
