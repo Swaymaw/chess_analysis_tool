@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.routes.v1_router import api_v1_router
 
-app = FastAPI(title="Chess API")
+app = FastAPI(title="Chess API", root_path="/api")
 app.include_router(api_v1_router)
 app.add_middleware(
     CORSMiddleware,

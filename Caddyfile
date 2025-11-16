@@ -1,6 +1,11 @@
 bishup.com, www.bishup.com {
     encode gzip
 
+    @api_no_slash path /api
+    handle @api_no_slash {
+        redir /api/
+    }
+
     # Route API calls to the backend
     handle_path /api/* {
         reverse_proxy backend:8000 {
