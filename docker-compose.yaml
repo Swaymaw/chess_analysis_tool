@@ -4,23 +4,46 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     networks:
       - appnet
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./chess_analyzer
       dockerfile: Dockerfile
     container_name: frontend
-    ports:
-      - "8080:80"
+    expose:
+      - "80"
     depends_on:
       - backend
     networks:
       - appnet
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - appnet
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
 
 networks:
   appnet:
     driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,22 @@
+bishup.com, www.bishup.com {
+    encode gzip
+
+    # Route API calls to the backend
+    handle_path /api/* {
+        reverse_proxy backend:8000 {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            # preserve Host header if you need to: header_up Host {host}
+        }
+    }
+
+    # Everything else goes to the frontend (nginx serving static files)
+    handle {
+        reverse_proxy frontend:80 {
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
