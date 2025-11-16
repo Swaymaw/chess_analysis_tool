@@ -48,7 +48,7 @@ def move_analysis(data: Annotated[MoveAnalyze, Query()]):
         move_quality = MoveQuality.GOOD
     elif diff > 0:
         move_quality = MoveQuality.EXCELLENT
-    elif diff == 0:
+    elif diff > -0.25:
         move_quality = MoveQuality.BEST
     else:
         move_quality = MoveQuality.BRILLIANT
