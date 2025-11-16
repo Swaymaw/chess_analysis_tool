@@ -1,20 +1,24 @@
 # --- Build stage ---
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS build
+FROM python:3.13-slim AS build
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock ./
+# Install uv
+RUN pip install uv
+
+COPY pyproject.toml uv.lock .python-version ./
 RUN uv sync --frozen --no-dev
 
 COPY . .
 RUN uv sync --frozen --no-dev
 
 # --- Runtime stage ---
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 WORKDIR /app
 
-# Copy virtual environment from uv build
+RUN pip install uv
+
 COPY --from=build /app/.venv ./.venv
 COPY --from=build /app .
 

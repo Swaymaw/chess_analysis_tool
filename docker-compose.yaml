@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8000:8000"
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: ./chess_analyzer
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
