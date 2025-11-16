@@ -82,7 +82,7 @@ def per_move_scores(data: Annotated[PerMoveScores, Query()]):
     return ORJSONResponse(content={"scores": scores})
 
 
-@analysis_router.get("/per_move_score")
+@analysis_router.get("/get_position_score")
 def get_position_score(data: Annotated[GetPositionScore, Query()]):
     score = get_score(data.fen)
     return ORJSONResponse(content={"score": score})
