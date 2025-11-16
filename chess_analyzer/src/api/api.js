@@ -38,7 +38,7 @@ class Api {
   }
 }
 
-const baseURL = import.meta.env.VITE_API_URL || "https://www.bishup.com";
+const baseURL = import.meta.env.VITE_API_URL || "https://www.bishup.com/api/";
 const api = new Api(baseURL);
 
 export default api;
