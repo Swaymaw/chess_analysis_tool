@@ -1,22 +1,23 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">
-            <img
-                src="./assets/logo.svg"
-                class="logo d-inline-block"
-                alt="ChessAnalysisTool logo"
-            />
-            Chess Analysis Tool
+            <div class="row">
+                <div class="col">
+                    <img
+                        src="./assets/new_logo.svg"
+                        class="logo d-inline-block"
+                        alt="ChessAnalysisTool logo"
+                    />
+                </div>
+                <div
+                    class="col d-flex justify-content-center align-items-center"
+                >
+                    <p style="color: #1f3473">BishUp - Chess Analysis Tool</p>
+                </div>
+            </div>
         </a>
         <div>
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">About</a>
-                </li>
-            </ul>
+            <ul class="navbar-nav"></ul>
         </div>
     </nav>
     <router-view />

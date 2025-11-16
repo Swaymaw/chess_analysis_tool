@@ -5,11 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "beautifulsoup4>=4.14.2",
     "chess>=1.11.2",
+    "datasets>=4.4.1",
     "dspy>=3.0.4",
     "fastapi[standard]>=0.121.0",
-    "openai>=2.7.2",
     "orjson>=3.11.4",
+    "pandas>=2.3.3",
     "requests>=2.32.5",
 ]
 

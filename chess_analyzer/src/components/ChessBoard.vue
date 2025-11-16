@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 90%">
         <div class="player-info">
             <span class="player-name">{{ topPlayerName }}</span>
             <span :class="topPlayerClockClass">{{ topPlayerClock }}</span>
@@ -7,7 +7,8 @@
         <TheChessboard
             :fen="currentFen"
             :board-config="boardConfig"
-            class="my-chessboard-container"
+            class="my-board"
+            style="width: 90%"
             @board-created="(api) => (boardAPI = api)"
         />
         <div class="player-info">

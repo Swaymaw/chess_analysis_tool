@@ -8,3 +8,11 @@ class MoveAnalyze(BaseModel):
         description="Which player side to analyze from [white|black]"
     )
     move: str = Field(description="SAN Move played by the player in this position")
+
+
+class PerMoveScores(BaseModel):
+    pgn: str = Field(description="PGN file to be analyzed")
+
+
+class GetPositionScore(BaseModel):
+    fen: str = Field(description="FEN string for current position")

@@ -9,3 +9,13 @@ class EngineTypes(str, Enum):
 class Side(str, Enum):
     WHITE = "white"
     BLACK = "black"
+
+
+class MoveQuality(str, Enum):
+    BLUNDER = "blunder"
+    MISTAKE = "mistake"
+    INACCURACY = "inaccuracy"
+    GOOD = "good"
+    EXCELLENT = "excellent"
+    BEST = "best"
+    BRILLIANT = "brilliant"

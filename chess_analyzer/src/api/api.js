@@ -24,6 +24,18 @@ class Api {
 
     return data;
   }
+
+  async getPerMoveScores(pgn) {
+    if (!pgn) throw new Error("PGN is required");
+
+    const { data } = await this.client.get("/api/v1/analysis/per_move_score", {
+      params: {
+        pgn: pgn,
+      },
+    });
+
+    return data;
+  }
 }
 
 const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8000";
