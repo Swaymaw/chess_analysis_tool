@@ -7,7 +7,7 @@ app = FastAPI(title="Chess API", root_path="/api")
 app.include_router(api_v1_router)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # or ["*"] for dev
+    allow_origins=["https://www.bishup.com"],  # or ["*"] for dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
