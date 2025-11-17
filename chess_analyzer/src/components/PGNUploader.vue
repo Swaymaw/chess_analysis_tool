@@ -1,31 +1,39 @@
 <template>
-    <div class="container border p-5 rounded">
-        <h1>Analyze Game</h1>
-        <br />
-        <form>
-            <div class="form-group">
-                <label for="pgn_string">Paste your PGN String Here:</label>
+    <div class="container-fluid container-md border p-4 p-md-5 rounded">
+        <h1 class="h3 h-md-1 text-center">Analyze Game</h1>
+
+        <form class="mt-4">
+            <div class="form-group mb-4">
+                <label for="pgn_string" class="fw-bold"
+                    >Paste your PGN String Here:</label
+                >
                 <textarea
                     v-model="PGNString"
                     id="pgn_string"
-                    rows="10"
-                    class="form-control"
+                    rows="8"
+                    class="form-control mt-2"
                 ></textarea>
             </div>
 
-            <div class="mt-5 d-flex align-items-center form-group">
-                <small class="me-3 fw-bolder">Or Upload a .PGN file</small>
-                <input type="file" class="border p-2" @change="loadPGNFile" />
+            <div
+                class="form-group d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3 mb-4"
+            >
+                <small class="fw-bold">Or Upload a .PGN file</small>
+                <input
+                    type="file"
+                    class="form-control w-100 w-md-auto"
+                    @change="loadPGNFile"
+                />
             </div>
 
-            <div class="d-flex justify-content-center mt-5">
+            <div class="d-flex justify-content-center mt-4">
                 <button
                     @click="analyze"
                     type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-primary w-100 w-md-auto"
                     :disabled="PGNEmpty"
                 >
-                    <i class="fa-regular fa-chess-knight" /> Analyze Game
+                    <i class="fa-regular fa-chess-knight"></i> Analyze Game
                 </button>
             </div>
         </form>

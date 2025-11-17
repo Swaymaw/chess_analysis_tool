@@ -1,0 +1,36 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    platform: linux/amd64
+    container_name: backend-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - ENV=development
+      - CORS_ORIGINS=["http://localhost:3000"]
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: ./chess_analyzer
+      dockerfile: Dockerfile.dev
+    container_name: frontend-dev
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./chess_analyzer:/app
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge

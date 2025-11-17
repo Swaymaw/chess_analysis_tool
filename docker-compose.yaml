@@ -4,6 +4,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
+    environment:
+      - ENV=production
+      - CORS_ORIGINS=["https://bishup.com", "https://www.bishup.com"]
     expose:
       - "8000"
     networks:
@@ -33,6 +36,8 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+    environment:
+      - VITE_API_URL=https://bishup.com/api
     networks:
       - appnet
     depends_on:

@@ -1,0 +1,22 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install uv
+RUN pip install uv
+
+COPY pyproject.toml uv.lock .python-version ./
+
+# Build the env fully inside THIS image
+RUN uv sync --frozen --no-dev
+
+COPY . .
+
+ENV VIRTUAL_ENV=/venv
+ENV PATH="/venv/bin:$PATH"
+
+RUN chmod +x Engines/stockfish-linux/stockfish-ubuntu-x86-64
+
+EXPOSE 8000
+
+CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -38,7 +38,7 @@ class Api {
   }
 }
 
-const baseURL = import.meta.env.VITE_API_URL || "https://www.bishup.com/api/";
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const api = new Api(baseURL);
 
 export default api;
