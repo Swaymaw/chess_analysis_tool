@@ -1,0 +1,42 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-dev
+    expose:
+      - "8000"
+    environment:
+      - ENV=local
+      - CORS_ORIGINS=http://localhost
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: ./chess_analyzer
+      dockerfile: Dockerfile
+    container_name: frontend-dev
+    expose:
+      - "80"
+    environment:
+      - VITE_API_URL=/api
+    networks:
+      - appnet
+
+  caddy:
+    image: caddy:2
+    container_name: caddy-dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
+    networks:
+      - appnet
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  appnet:
+    driver: bridge

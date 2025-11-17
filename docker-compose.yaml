@@ -20,6 +20,8 @@ services:
     container_name: frontend
     expose:
       - "80"
+    environment:
+      - VITE_API_URL=https://bishup.com/api
     depends_on:
       - backend
     networks:
@@ -36,8 +38,6 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-    environment:
-      - VITE_API_URL=https://bishup.com/api
     networks:
       - appnet
     depends_on:
