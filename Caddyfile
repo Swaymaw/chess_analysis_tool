@@ -13,12 +13,25 @@ bishup.com, www.bishup.com {
             # preserve Host header if you need to: header_up Host {host}
         }
     }
+    @static {
+        path /assets/*
+        path *.js
+        path *.css
+        path *.svg
+        path *.png
+        path *.jpg
+        path *.jpeg
+        path *.webp
+        path *.ico
+    }
 
-    # Everything else goes to the frontend (nginx serving static files)
+    handle @static {
+        reverse_proxy frontend:80
+    }
+
+    # All other paths → SPA fallback
     handle {
-        route {
-            rewrite * /index.html
-            reverse_proxy frontend:80
-        }
+        rewrite * /index.html
+        reverse_proxy frontend:80
     }
 }
