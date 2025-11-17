@@ -16,6 +16,8 @@ bishup.com, www.bishup.com {
 
     # Everything else goes to the frontend (nginx serving static files)
     handle {
+        try_files {path} {path}/ /index.html
+
         reverse_proxy frontend:80 {
             header_up X-Forwarded-Proto {scheme}
             header_up X-Forwarded-For {remote_host}
