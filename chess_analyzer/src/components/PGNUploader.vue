@@ -18,7 +18,7 @@
             <div
                 class="form-group d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3 mb-4"
             >
-                <small class="fw-bold">Or Upload a .PGN file</small>
+                <small class="fw-bold">Or Upload a .PGN</small>
                 <input
                     type="file"
                     class="form-control w-100 w-md-auto"

@@ -9,7 +9,7 @@
                     style="height: 32px"
                 />
                 <span class="fw-semibold" style="color: #1f3473"
-                    >BishUp – Chess Analysis Tool</span
+                    >BishUp – Chess Analysis</span
                 >
             </a>
 
