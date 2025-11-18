@@ -23,13 +23,13 @@ def get_move_quality(diff: float) -> MoveQuality:
     return move_quality
 
 
-def get_accuracy(cp_losses: list[float], tau: float = 50) -> float:
+def get_accuracy(cp_losses: list[float], m: float = 40, k: float = 10) -> float:
     aggregated_loss = 0.0
     count = 0.0
     print("CP LOSSES:", cp_losses)
     for loss in cp_losses:
         count += 1
-        aggregated_loss += math.exp(-1 * loss / tau)
+        aggregated_loss += 0.5 * (1 - math.tanh((loss - m) / k))
 
     scaled = (aggregated_loss / count) * 100
 

@@ -20,7 +20,7 @@ analysis_router = APIRouter(prefix="/analysis")
 def move_analysis(data: Annotated[MoveAnalyze, Query()]):
 
     _, best_move, best_move_score, my_move_score = move_scoring(
-        fen=data.fen, move=data.move, depth_per_move=17
+        fen=data.fen, move=data.move, depth_per_move=12
     )
 
     if data.orientation == "black":
@@ -51,7 +51,7 @@ def move_analysis(data: Annotated[MoveAnalyze, Query()]):
 @analysis_router.get("/per_move_score")
 def per_move_scores(data: Annotated[PerMoveScores, Query()]):
     scores, move_qualities, white_acc, black_acc = per_move_score(
-        data.pgn, depth_per_move=17
+        data.pgn, depth_per_move=12
     )
 
     return ORJSONResponse(

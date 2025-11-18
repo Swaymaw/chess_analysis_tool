@@ -178,7 +178,7 @@ def per_move_score(
     elif result == "0-1":
         impact = -0.8
 
-    white_acc = get_accuracy(white_cp, tau=1.1) + (impact * 2.5)
-    black_acc = get_accuracy(black_cp, tau=1.1) - (impact * 2.5)
+    white_acc = get_accuracy(white_cp, m=0.8, k=0.4) + (impact * 2.5)
+    black_acc = get_accuracy(black_cp, m=0.8, k=0.4) - (impact * 2.5)
 
     return scores, move_qualities, white_acc, black_acc

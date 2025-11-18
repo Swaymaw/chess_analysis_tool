@@ -33,7 +33,6 @@ def move_eval_formatter(
         MoveCount: {move_count}
         MyMove: {my_move} | BestMove: {best_move}
         MyMoveScore: {fmt(my_move_score)} | BestMoveScore: {fmt(best_move_score)}
-        MyMove vs BestMove: {(my_move_score - best_move_score) / 100:.2f}
     """
     return summary
 
