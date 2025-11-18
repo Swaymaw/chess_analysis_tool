@@ -9,13 +9,13 @@ def get_move_quality(diff: float) -> MoveQuality:
         move_quality = MoveQuality.BLUNDER
     elif diff > 1.0:
         move_quality = MoveQuality.MISTAKE
-    elif diff > 0.5:
+    elif diff > 0.75:
         move_quality = MoveQuality.INACCURACY
     elif diff > 0.25:
         move_quality = MoveQuality.GOOD
     elif diff > 0:
         move_quality = MoveQuality.EXCELLENT
-    elif diff > -0.25:
+    elif diff > -0.5:
         move_quality = MoveQuality.BEST
     else:
         move_quality = MoveQuality.BRILLIANT
