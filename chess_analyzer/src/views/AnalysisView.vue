@@ -13,10 +13,29 @@
                         :scores="scores"
                         :moveIndex="moveIdx"
                     />
+                    <h4 class="mt-5">Game Summary</h4>
+                    <div v-if="scores != []">
+                        <table
+                            class="table table-striped table-bordered table-hover"
+                        >
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">White</th>
+                                    <th scope="col">Black</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ whiteAcc.toFixed(2) }}</td>
+                                    <td>{{ blackAcc.toFixed(2) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <MoveQuality
                         class="mt-5"
-                        v-if="res?.move_quality && !isLoadingEvaluation"
-                        :move_quality="res.move_quality"
+                        v-if="moveIdx >= 0"
+                        :move_quality="moveQualities[moveIdx]"
                     />
                 </div>
                 <pre v-if="isLoadingEvaluation">Analyzing...</pre>
@@ -39,15 +58,21 @@ const isLoadingEvaluation = ref(false);
 const isLoadingScores = ref(false);
 const res = ref(null);
 const scores = ref([]);
-const moveIdx = ref(0);
+const moveQualities = ref([]);
+const moveIdx = ref(-1);
+const whiteAcc = ref(0.0);
+const blackAcc = ref(0.0);
 
 onMounted(() => {
     isLoadingScores.value = true;
     async function getPerMoveScore() {
         const api_res = await api.getPerMoveScores(store.pgn);
         scores.value = api_res?.scores;
+        moveQualities.value = api_res?.move_qualities;
+        whiteAcc.value = api_res?.white_acc ?? 0.0;
+        blackAcc.value = api_res?.black_acc ?? 0.0;
+
         isLoadingScores.value = false;
-        console.log(scores.value);
     }
     getPerMoveScore();
 });

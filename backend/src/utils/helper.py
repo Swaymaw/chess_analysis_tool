@@ -24,7 +24,6 @@ def fmt(s: float):
 
 def move_eval_formatter(
     move_count: int,
-    player_name: str,
     my_move: str,
     best_move: str,
     best_move_score: float,
@@ -32,7 +31,6 @@ def move_eval_formatter(
 ):
     summary = f"""
         MoveCount: {move_count}
-        PlayerName: {player_name}
         MyMove: {my_move} | BestMove: {best_move}
         MyMoveScore: {fmt(my_move_score)} | BestMoveScore: {fmt(best_move_score)}
         MyMove vs BestMove: {(my_move_score - best_move_score) / 100:.2f}

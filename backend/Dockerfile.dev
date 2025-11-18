@@ -15,7 +15,7 @@ COPY . .
 ENV VIRTUAL_ENV=/venv
 ENV PATH="/venv/bin:$PATH"
 
-RUN chmod +x Engines/stockfish-linux/stockfish-ubuntu-x86-64
+RUN chmod +x Engines/stockfish-linux/stockfish-ubuntu-x86-64-avx2
 
 EXPOSE 8000
 

@@ -61,7 +61,7 @@ const option = computed(() => ({
                 symbol: "none",
                 label: { show: false },
                 lineStyle: { width: 2, type: "solid", color: "#fff" },
-                data: [{ xAxis: Number(props.moveIndex) }],
+                data: [{ xAxis: Number(props.moveIndex) + 1 }],
                 z: 1,
             },
 

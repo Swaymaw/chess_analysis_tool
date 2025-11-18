@@ -5,9 +5,10 @@ import chess
 import chess.pgn
 from chess.engine import Cp, Limit, PovScore, SimpleEngine
 
+from src.modules.move_metrics import get_accuracy, get_move_quality
 from src.utils.config import MATE_SCORE
 from src.utils.helper import get_engine, uci_to_san
-from src.utils.types import EngineTypes
+from src.utils.types import EngineTypes, MoveQuality
 
 
 @lru_cache(maxsize=256)
@@ -16,7 +17,7 @@ def move_scoring(
     move: str,
     engine_type: EngineTypes = EngineTypes.STOCKFISH,
     depth_per_move: int = 8,
-) -> tuple[str, float, float]:
+) -> tuple[float, str, float, float]:
 
     board = chess.Board(fen)
     engine: SimpleEngine = get_engine(engine_type)
@@ -37,6 +38,12 @@ def move_scoring(
         board,
     )
 
+    position_eval = info.get(
+        "score", PovScore(relative=Cp(0), turn=chess.WHITE)
+    ).white()
+
+    position_score = position_eval.score(mate_score=MATE_SCORE) / 100
+
     # push best move on a copied board and evaluate score on reached position
     b_best = board.copy()
     b_best.push_san(best_move)
@@ -55,7 +62,7 @@ def move_scoring(
         ms = info_my.get("score", PovScore(relative=Cp(0), turn=chess.WHITE)).white()
         my_move_score = ms.score(mate_score=MATE_SCORE)
 
-    return best_move, best_move_score, my_move_score
+    return position_score, best_move, best_move_score, my_move_score
 
 
 @lru_cache(maxsize=256)
@@ -113,25 +120,65 @@ def per_move_score(
     pgn: str,
     engine_type: EngineTypes = EngineTypes.STOCKFISH,
     depth_per_move: float = 8,
-) -> list[float]:
+) -> tuple[list[float], list[MoveQuality], float, float]:
     parsed_pgn = io.StringIO(pgn)
     game = chess.pgn.read_game(parsed_pgn)
+
     if game is None:
-        return []
+        return ([], [], 0.0, 0.0)
+
     moves = list(game.mainline_moves())
 
+    if not moves:
+        return ([], [], 0.0, 0.0)
+
     scores = []
+    move_qualities = []
+    white_cp = []
+    black_cp = []
     board = chess.Board()
-    scores.append(
-        get_score(board.fen(), engine_type=engine_type, depth_per_move=depth_per_move)
-    )
 
     for move in moves:
-        board.push(move)
-        scores.append(
-            get_score(
-                board.fen(), engine_type=engine_type, depth_per_move=depth_per_move
-            )
+        position_score, _, best_move_score, my_move_score = move_scoring(
+            fen=board.fen(),
+            engine_type=engine_type,
+            move=uci_to_san(move, board=board),
+            depth_per_move=depth_per_move,
         )
+        diff = best_move_score - my_move_score
 
-    return scores
+        if board.turn == chess.BLACK:
+            diff *= -1
+        diff /= 100
+
+        if board.turn == chess.WHITE:
+            white_cp.append(abs(diff))
+        else:
+            black_cp.append(abs(diff))
+
+        move_quality = get_move_quality(diff)
+
+        move_qualities.append(move_quality)
+        scores.append(position_score)
+        board.push(move)
+
+    # adding position score after last move was played on board
+    position_score = get_score(
+        fen=board.fen(),
+        engine_type=engine_type,
+        depth_per_move=depth_per_move,
+    )
+    scores.append(position_score)
+
+    impact = 0
+    result = game.headers["Result"]
+
+    if result == "1-0":
+        impact = 0.8
+    elif result == "0-1":
+        impact = -0.8
+
+    white_acc = get_accuracy(white_cp, tau=1.3) + (impact * 2.5)
+    black_acc = get_accuracy(black_cp, tau=1.3) - (impact * 2.5)
+
+    return scores, move_qualities, white_acc, black_acc
