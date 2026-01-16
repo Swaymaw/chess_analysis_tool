@@ -2,15 +2,22 @@
     <div class="container-md py-4">
         <div class="row g-4">
             <div class="col-lg-7">
-                <div class="ai-commentary-section">
+                <div style="height: 120px; margin-bottom: 1rem;">
                     <div v-if="isLoadingEvaluation" class="placeholder-glow">
                         <span class="placeholder col-12 rounded py-3"></span>
                     </div>
-                    <div v-else-if="res?.ai_commentary" class="comment-bubble shadow-sm p-3 border-start border-4 border-primary bg-white rounded">
+                    
+                    <div v-else-if="res?.ai_commentary" 
+                        class="comment-bubble shadow-sm p-3 border-start border-4 border-primary bg-white rounded"
+                        style="height: 100%; overflow-y: auto;">
                         <div class="small fw-bold text-primary mb-1">
                             <i class="bi bi-robot"></i> AI INSIGHT
                         </div>
                         <p class="mb-0 fst-italic text-dark">{{ res.ai_commentary }}</p>
+                    </div>
+                    
+                    <div v-else class="h-100 border rounded d-flex align-items-center justify-content-center text-muted small bg-white opacity-50">
+                        Waiting for move...
                     </div>
                 </div>
                 <div class="board-wrapper shadow-sm rounded p-2 bg-light text-center">
@@ -75,7 +82,8 @@
     max-width: 1100px;
 }
 .comment-bubble {
-    position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
     font-size: 1.05rem;
     line-height: 1.5;
 }
