@@ -1,5 +1,5 @@
 <template>
-    <h5>{{ line }}</h5>
+    <h5 class="card-title fw-bold text-muted text-uppercase small mb-0">{{ line }}</h5>
 </template>
 <script setup>
 import { computed } from "vue";

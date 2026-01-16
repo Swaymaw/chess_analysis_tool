@@ -18,7 +18,7 @@
 
         <div class="game-controls">
             <h2>Game Controls</h2>
-            <div class="button-group">
+            <div class="button-group d-flex justify-content-center">
                 <button
                     @click="prevMove"
                     :disabled="moveIndex <= -1"

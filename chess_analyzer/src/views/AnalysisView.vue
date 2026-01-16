@@ -2,14 +2,23 @@
     <div class="container-md py-4">
         <div class="row g-4">
             <div class="col-lg-7">
+                <div class="ai-commentary-section">
+                    <div v-if="isLoadingEvaluation" class="placeholder-glow">
+                        <span class="placeholder col-12 rounded py-3"></span>
+                    </div>
+                    <div v-else-if="res?.ai_commentary" class="comment-bubble shadow-sm p-3 border-start border-4 border-primary bg-white rounded">
+                        <div class="small fw-bold text-primary mb-1">
+                            <i class="bi bi-robot"></i> AI INSIGHT
+                        </div>
+                        <p class="mb-0 fst-italic text-dark">{{ res.ai_commentary }}</p>
+                    </div>
+                </div>
                 <div class="board-wrapper shadow-sm rounded p-2 bg-light text-center">
                     <ChessBoard :pgn="store.pgn" @move-change="onMoveChange" />
                 </div>
             </div>
-
             <div class="col-lg-5">
                 <div class="analysis-panel d-flex flex-column gap-3">
-                    
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title fw-bold text-muted text-uppercase small mb-3">Game Evaluation</h5>
@@ -20,25 +29,11 @@
                             <ScoreChart v-else :scores="scores" :moveIndex="moveIdx" />
                         </div>
                     </div>
-
-                    <div class="ai-commentary-section">
-                        <div v-if="isLoadingEvaluation" class="placeholder-glow">
-                            <span class="placeholder col-12 rounded py-3"></span>
-                        </div>
-                        <div v-else-if="res?.ai_commentary" class="comment-bubble shadow-sm p-3 border-start border-4 border-primary bg-white rounded">
-                            <div class="small fw-bold text-primary mb-1">
-                                <i class="bi bi-robot"></i> AI INSIGHT
-                            </div>
-                            <p class="mb-0 fst-italic text-dark">{{ res.ai_commentary }}</p>
-                        </div>
-                    </div>
-
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <!-- <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title fw-bold text-muted text-uppercase small mb-0">Game Summary</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <MoveQuality v-if="moveIdx >= 0" :move_quality="moveQualities[moveIdx]" />
-                            </div> -->
+                            </div>
 
                             <div v-if="scores && scores.length" class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
@@ -65,17 +60,10 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="card border-0 shadow-sm bg-dark text-light">
-                        <div class="card-body p-3">
-                            <h6 class="small fw-bold text-uppercase opacity-50 mb-2">Engine Line</h6>
-                            <div v-if="isLoadingEvaluation" class="spinner-grow spinner-grow-sm opacity-50"></div>
-                            <div v-else class="engine-text font-monospace small">
-                                {{ res?.description || "Select a move to see analysis" }}
-                            </div>
-                        </div>
-                    </div>
-
+                    <EngineLine
+                        :isLoading="isLoadingEvaluation"
+                        :data="res"
+                    />
                 </div>
             </div>
         </div>
@@ -117,6 +105,7 @@ import { useGameStore } from "../store/game.js";
 import ChessBoard from "../components/ChessBoard.vue";
 import ScoreChart from "../components/ScoreChart.vue";
 import MoveQuality from "../components/MoveQuality.vue";
+import EngineLine from '../components/EngineLine.vue'
 import api from "../api/api.js";
 
 const isLoadingEvaluation = ref(false);

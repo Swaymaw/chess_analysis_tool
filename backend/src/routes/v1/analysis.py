@@ -53,7 +53,13 @@ async def move_analysis(data: Annotated[MoveAnalyze, Query()]):
 
     return ORJSONResponse(
         content={
+            "move_count": math.ceil(((data.moveIndex + 1) / 2)),
+            "my_move": data.move,
+            "best_move": best_move,
+            "best_move_score": best_move_score / 100,
+            "my_move_score": my_move_score / 100,
             "description": move_eval + line_description,
+            "engine_line": engine_line,
             "ai_commentary": ai_commentary,
         }
     )
