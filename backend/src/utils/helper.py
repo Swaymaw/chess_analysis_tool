@@ -1,6 +1,8 @@
 from functools import lru_cache
 
 import chess.engine
+from google import genai
+import os
 
 from src.utils.config import ENGINE_PATHS, WEIGHTS_FILE
 from src.utils.types import EngineTypes
@@ -16,6 +18,11 @@ def get_engine(engine_type: EngineTypes) -> chess.engine.SimpleEngine:
         )
         engine.configure({"WeightsFile": WEIGHTS_FILE.get("maia-2200")})
         return engine
+
+
+@lru_cache(maxsize=1)
+def get_ai_client():
+    return genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 def fmt(s: float):

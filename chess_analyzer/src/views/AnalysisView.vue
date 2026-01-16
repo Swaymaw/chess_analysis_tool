@@ -1,53 +1,114 @@
 <template>
-    <div class="container-md">
-        <div class="row">
-            <div class="col">
-                <ChessBoard :pgn="store.pgn" @move-change="onMoveChange" />
-            </div>
-            <div class="col">
-                <div class="border p-4 rounded mt-4">
-                    <h4>Game Score</h4>
-                    <pre v-if="isLoadingScores">Getting Scores...</pre>
-                    <ScoreChart :scores="scores" :moveIndex="moveIdx" />
-                    <h4 class="mt-3">Game Summary</h4>
-                    <div v-if="scores && scores.length">
-                        <table
-                            class="table table-sm table-striped table-bordered table-hover"
-                        >
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Label</th>
-                                    <th>White</th>
-                                    <th>Black</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>Accuracy</td>
-                                    <td>{{ whiteAcc.toFixed(2) }}</td>
-                                    <td>{{ blackAcc.toFixed(2) }}</td>
-                                </tr>
-                                <tr v-for="l in labels" :key="l">
-                                    <td>{{ l }}</td>
-                                    <td>{{ counts.white[l.toLowerCase()] }}</td>
-                                    <td>{{ counts.black[l.toLowerCase()] }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <MoveQuality
-                        class="mt-3"
-                        v-if="moveIdx >= 0"
-                        :move_quality="moveQualities[moveIdx]"
-                    />
+    <div class="container-md py-4">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="board-wrapper shadow-sm rounded p-2 bg-light text-center">
+                    <ChessBoard :pgn="store.pgn" @move-change="onMoveChange" />
                 </div>
-                <pre v-if="isLoadingEvaluation">Analyzing...</pre>
-                <pre v-else>{{ res?.description || null }}</pre>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="analysis-panel d-flex flex-column gap-3">
+                    
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-muted text-uppercase small mb-3">Game Evaluation</h5>
+                            <div v-if="isLoadingScores" class="text-center py-4">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                <span class="ms-2 text-muted">Calculating scores...</span>
+                            </div>
+                            <ScoreChart v-else :scores="scores" :moveIndex="moveIdx" />
+                        </div>
+                    </div>
+
+                    <div class="ai-commentary-section">
+                        <div v-if="isLoadingEvaluation" class="placeholder-glow">
+                            <span class="placeholder col-12 rounded py-3"></span>
+                        </div>
+                        <div v-else-if="res?.ai_commentary" class="comment-bubble shadow-sm p-3 border-start border-4 border-primary bg-white rounded">
+                            <div class="small fw-bold text-primary mb-1">
+                                <i class="bi bi-robot"></i> AI INSIGHT
+                            </div>
+                            <p class="mb-0 fst-italic text-dark">{{ res.ai_commentary }}</p>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <!-- <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title fw-bold text-muted text-uppercase small mb-0">Game Summary</h5>
+                                <MoveQuality v-if="moveIdx >= 0" :move_quality="moveQualities[moveIdx]" />
+                            </div> -->
+
+                            <div v-if="scores && scores.length" class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr class="small">
+                                            <th>Metric</th>
+                                            <th class="text-center">White</th>
+                                            <th class="text-center">Black</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
+                                        <tr>
+                                            <td class="fw-semibold">Accuracy</td>
+                                            <td class="text-center"><span class="badge bg-success bg-opacity-10 text-success p-2 w-75">{{ whiteAcc.toFixed(1) }}%</span></td>
+                                            <td class="text-center"><span class="badge bg-success bg-opacity-10 text-success p-2 w-75">{{ blackAcc.toFixed(1) }}%</span></td>
+                                        </tr>
+                                        <tr v-for="l in labels" :key="l" class="small">
+                                            <td class="text-muted">{{ l }}</td>
+                                            <td class="text-center fw-bold">{{ counts.white[l.toLowerCase()] }}</td>
+                                            <td class="text-center fw-bold">{{ counts.black[l.toLowerCase()] }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm bg-dark text-light">
+                        <div class="card-body p-3">
+                            <h6 class="small fw-bold text-uppercase opacity-50 mb-2">Engine Line</h6>
+                            <div v-if="isLoadingEvaluation" class="spinner-grow spinner-grow-sm opacity-50"></div>
+                            <div v-else class="engine-text font-monospace small">
+                                {{ res?.description || "Select a move to see analysis" }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.container-md {
+    max-width: 1100px;
+}
+.comment-bubble {
+    position: relative;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+.comment-bubble::after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    bottom: -10px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #fff transparent transparent;
+}
+.card {
+    transition: transform 0.2s ease;
+}
+.engine-text {
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+    color: #00ff88; /* Matrix/Terminal green feel for engine */
+}
+</style>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";

@@ -12,12 +12,13 @@ from src.modules.engine_insights import (
 )
 from src.schemas.app_schema import GetPositionScore, MoveAnalyze, PerMoveScores
 from src.utils.helper import chess_line_formatter, move_eval_formatter
+from src.modules.move_commentary import get_move_commentary
 
 analysis_router = APIRouter(prefix="/analysis")
 
 
 @analysis_router.get("/move_analyze")
-def move_analysis(data: Annotated[MoveAnalyze, Query()]):
+async def move_analysis(data: Annotated[MoveAnalyze, Query()]):
 
     _, best_move, best_move_score, my_move_score = move_scoring(
         fen=data.fen, move=data.move, depth_per_move=12
@@ -26,6 +27,15 @@ def move_analysis(data: Annotated[MoveAnalyze, Query()]):
     if data.orientation == "black":
         best_move_score *= -1
         my_move_score *= -1
+
+    # --- Fetch AI Commentary ---
+    ai_commentary = await get_move_commentary(
+        move=data.move,
+        best_move=best_move,
+        score=my_move_score,
+        best_score=best_move_score,
+        fen=data.fen,
+    )
 
     move_eval = move_eval_formatter(
         move_count=math.ceil(((data.moveIndex + 1) / 2)),
@@ -44,6 +54,7 @@ def move_analysis(data: Annotated[MoveAnalyze, Query()]):
     return ORJSONResponse(
         content={
             "description": move_eval + line_description,
+            "ai_commentary": ai_commentary,
         }
     )
 
